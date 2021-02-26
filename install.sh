@@ -609,7 +609,7 @@ acme() {
 
 xray_conf_add_tls() {
     cd ${xray_conf_dir} || exit
-    wget --no-check-certificate https://raw.githubusercontent.com/paniy/Xray_bash_onekey/main/VLESS_tls/config.json -O config.json
+    wget --no-check-certificate https://raw.githubusercontent.com/6gfd8/xray_setup_script/main/VLESS_tls/config.json -O config.json
     modify_path
     modify_alterid
     modify_inbound_port
@@ -618,7 +618,7 @@ xray_conf_add_tls() {
 
 xray_conf_add_xtls() {
     cd ${xray_conf_dir} || exit
-    wget --no-check-certificate https://raw.githubusercontent.com/paniy/Xray_bash_onekey/main/VLESS_xtls/config.json -O config.json
+    wget --no-check-certificate https://raw.githubusercontent.com/6gfd8/xray_setup_script/main/VLESS_xtls/config.json -O config.json
     modify_path
     modify_alterid
     modify_inbound_port
@@ -732,9 +732,9 @@ EOF
 start_process_systemd() {
     systemctl daemon-reload
     systemctl restart nginx
-    judge "Nginx 启动"
+    judge "Nginx Start"
     systemctl restart xray
-    judge "Xray 启动"
+    judge "Xray Start"
 }
 
 enable_process_systemd() {
@@ -768,7 +768,7 @@ nginx_process_disabled() {
 #}
 
 acme_cron_update() {
-    wget -N -P /usr/bin/idleleo-xray --no-check-certificate "https://raw.githubusercontent.com/paniy/Xray_bash_onekey/main/ssl_update.sh"
+    wget -N -P /usr/bin/idleleo-xray --no-check-certificate "https://raw.githubusercontent.com/6gfd8/xray_setup_script/main/ssl_update.sh"
     if [[ $(crontab -l | grep -c "ssl_update.sh") -lt 1 ]]; then
         if [[ "${ID}" == "centos" ]]; then
             #        sed -i "/acme.sh/c 0 3 * * 0 \"/root/.acme.sh\"/acme.sh --cron --home \"/root/.acme.sh\" \
