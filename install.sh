@@ -9,9 +9,9 @@ cd "$(
 #====================================================
 #	System Request:Debian 9+/Ubuntu 18.04+/Centos 7+
 #	Author:	paniy
-#	Dscription: Xray ws+tls onekey Management
+#	Dscription: Xray ws+tls setup script
 #	Version: 2.0
-#	email:admin@idleleo.com
+#	email:admin@id leleo.com
 #	Official document: www.xray.com
 #====================================================
 
@@ -41,7 +41,7 @@ nginx_dir="/etc/nginx"
 web_dir="/home/wwwroot"
 nginx_openssl_src="/usr/local/src"
 xray_bin_dir="/usr/local/bin/xray"
-idleleo_xray_dir="/usr/bin/idleleo-xray"
+xray_script_xray_dir="/usr/bin/xray_script-xray"
 xray_info_file="$HOME/xray_info.inf"
 xray_qr_config_file="/usr/local/vmess_qr.json"
 nginx_systemd_file="/etc/systemd/system/nginx.service"
@@ -52,8 +52,8 @@ xray_systemd_filed2="/etc/systemd/system/xray@.service.d"
 xray_access_log="/var/log/xray/access.log"
 xray_error_log="/var/log/xray/error.log"
 amce_sh_file="/root/.acme.sh/acme.sh"
-ssl_update_file="${idleleo_xray_dir}/ssl_update.sh"
-idleleo_commend_file="/usr/bin/idleleo"
+ssl_update_file="${xray_script_xray_dir}/ssl_update.sh"
+xray_script_commend_file="/usr/bin/xray_script"
 nginx_version="1.18.0"
 openssl_version="1.1.1j"
 jemalloc_version="5.2.1"
@@ -770,7 +770,7 @@ nginx_process_disabled() {
 #}
 
 acme_cron_update() {
-    wget -N -P /usr/bin/idleleo-xray --no-check-certificate "https://raw.githubusercontent.com/6gfd8/xray_setup_script/main/ssl_update.sh"
+    wget -N -P /usr/bin/xray_script-xray --no-check-certificate "https://raw.githubusercontent.com/6gfd8/xray_setup_script/main/ssl_update.sh"
     if [[ $(crontab -l | grep -c "ssl_update.sh") -lt 1 ]]; then
         if [[ "${ID}" == "centos" ]]; then
             #        sed -i "/acme.sh/c 0 3 * * 0 \"/root/.acme.sh\"/acme.sh --cron --home \"/root/.acme.sh\" \
@@ -1103,9 +1103,9 @@ update_sh() {
         read -r update_confirm
         case $update_confirm in
         [yY][eE][sS] | [yY])
-            rm -f ${idleleo_commend_file}
-            wget -N --no-check-certificate -P ${idleleo_xray_dir} https://raw.githubusercontent.com/paniy/Xray_bash_onekey/main/install.sh && chmod +x ${idleleo_xray_dir}/install.sh
-            ln -s ${idleleo_xray_dir}/install.sh ${idleleo_commend_file}
+            rm -f ${xray_script_commend_file}
+            wget -N --no-check-certificate -P ${xray_script_xray_dir} https://raw.githubusercontent.com/paniy/Xray_bash_onekey/main/install.sh && chmod +x ${xray_script_xray_dir}/install.sh
+            ln -s ${xray_script_xray_dir}/install.sh ${xray_script_commend_file}
             echo -e "${OK} ${GreenBG} Update complete ${Font}"
             exit 0
             ;;
@@ -1144,19 +1144,19 @@ list() {
     esac
 }
 
-idleleo_commend() {
+xray_script_commend() {
     # Add management commands
-    if [ -L "${idleleo_commend_file}" ]; then
-        echo -e "${Green}You can use the ${Red}idleleo${Font} command to manage the script\n${Font}"
+    if [ -L "${xray_script_commend_file}" ]; then
+        echo -e "${Green}You can use the ${Red}xray_script${Font} command to manage the script\n${Font}"
     else
-        if [ -L "/usr/local/bin/idleleo" ]; then
-            rm -f /usr/local/bin/idleleo
+        if [ -L "/usr/local/bin/xray_script" ]; then
+            rm -f /usr/local/bin/xray_script
         fi
         ln -s $(
             cd "$(dirname "$0")"
             pwd
-        )/install.sh ${idleleo_commend_file}
-        echo -e "${Green}You can use the ${Red}idleleo${Font} command to manage the script\n${Font}"
+        )/install.sh ${xray_script_commend_file}
+        echo -e "${Green}You can use the ${Red}xray_script${Font} command to manage the script\n${Font}"
     fi
 }
 
@@ -1167,7 +1167,7 @@ menu() {
     echo -e "\thttps://github.com/paniy\n"
     echo -e "Currently script version:${shell_mode}\n"
 
-    idleleo_commend
+    xray_script_commend
 
     echo -e "—————————————— installation wizard ——————————————"""
     echo -e "${Green}0.${Font}  Upgrade script"
@@ -1196,33 +1196,33 @@ menu() {
     case $menu_num in
     0)
         update_sh
-        bash idleleo
+        bash xray_script
         ;;
     1)
         shell_mode="ws"
         install_xray_ws_tls
-        bash idleleo
+        bash xray_script
         ;;
     2)
         shell_mode="xtls"
         install_v2_xtls
-        bash idleleo
+        bash xray_script
         ;;
     3)
         xray_update
-        bash idleleo
+        bash xray_script
         ;;
     4)
         read -rp "Enter UUID:" UUID
         modify_UUID
         start_process_systemd
-        bash idleleo
+        bash xray_script
         ;;
     5)
         read -rp "Enter alterID:" alterID
         modify_alterid
         start_process_systemd
-        bash idleleo
+        bash xray_script
         ;;
     6)
         read -rp "Enter Port number:" port
@@ -1232,19 +1232,19 @@ menu() {
             modify_inbound_port
         fi
         start_process_systemd
-        bash idleleo
+        bash xray_script
         ;;
     7)
         tls_type
-        bash idleleo
+        bash xray_script
         ;;
     8)
         show_access_log
-        bash idleleo
+        bash xray_script
         ;;
     9)
         show_error_log
-        bash idleleo
+        bash xray_script
         ;;
     10)
         basic_information
@@ -1254,40 +1254,40 @@ menu() {
             vmess_qr_link_image
         fi
         show_information
-        bash idleleo
+        bash xray_script
         ;;
     11)
         bbr_boost_sh
-        bash idleleo
+        bash xray_script
         ;;
     12)
         mtproxy_sh
-        bash idleleo
+        bash xray_script
         ;;
     13)
         stop_process_systemd
         ssl_update_manuel
         start_process_systemd
-        bash idleleo
+        bash xray_script
         ;;
     14)
         uninstall_all
-        bash idleleo
+        bash xray_script
         ;;
     15)
         acme_cron_update
-        bash idleleo
+        bash xray_script
         ;;
     16)
         delete_tls_key_and_crt
-        bash idleleo
+        bash xray_script
         ;;
     17)
         exit 0
         ;;
     *)
         echo -e "${RedBG}Please enter the correct number${Font}"
-        bash idleleo
+        bash xray_script
         ;;
     esac
 }
