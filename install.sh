@@ -11,8 +11,8 @@ cd "$(
 #	Author:	paniy
 #	Dscription: Xray ws+tls setup script
 #	Version: 2.0
-#	email:admin@id leleo.com
-#	Official document: www.xray.com
+#	email:admin@idleleo dot com
+#	Official document: xray.com
 #====================================================
 
 #fonts color
