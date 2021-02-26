@@ -1189,7 +1189,7 @@ menu() {
     echo -e "${Green}13.${Font} Certificate Renewal"
     echo -e "${Green}14.${Font} Uninstall Xray"
     echo -e "${Green}15.${Font} Update certificate renewal cron job"
-    echo -e "${Green}16.${Font} Empty certificate legacy files"
+    echo -e "${Green}16.${Font} Empty legacy certificate files"
     echo -e "${Green}17.${Font} Exit \n"
 
     read -rp "Enter your option:" menu_num
