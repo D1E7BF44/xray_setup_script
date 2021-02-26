@@ -313,11 +313,11 @@ modify_nginx_other() {
         sed -i "/proxy_pass/c \\\tproxy_pass http://127.0.0.1:${PORT};" ${nginx_conf}
     fi
     sed -i "/return/c \\\t\\treturn 301 https://${domain}\$request_uri;" ${nginx_conf}
-    sed -i "/returc/c \\\t\\treturn 302 https://www.idleleo.com/helloworld;" ${nginx_conf}
+#    sed -i "/returc/c \\\t\\treturn 302 https://${domain}/helloworld;" ${nginx_conf}
     sed -i "/locatioc/c \\\t\\tlocation \/" ${nginx_conf}
     #sed -i "/#gzip  on;/c \\\t#gzip  on;\\n\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
     #sed -i "/\\tserver_tokens off;\\n\\tserver_tokens off;/c \\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
-    sed -i "s/        server_name  localhost;/\t\tserver_name  localhost;\n\n\t\tif (\$host = '${local_ip}'){\n\t\t\treturn 302 https:\/\/www.idleleo.com\/helloworld;\n\t\t}\n/" ${nginx_dir}/conf/nginx.conf
+    sed -i "s/        server_name  localhost;/\t\tserver_name  localhost;\n\n\t\tif (\$host = '${local_ip}'){\n\t\t\treturn 302 https:\/\/${domain}\/helloworld;\n\t\t}\n/" ${nginx_dir}/conf/nginx.conf
     #sed -i "27i \\\tproxy_intercept_errors on;"  ${nginx_dir}/conf/nginx.conf
 }
 
@@ -1162,7 +1162,6 @@ menu() {
     update_sh
     echo -e "\tXray installation management script ${Red}[${shell_version}]${Font}"
     echo -e "\t---authored by paniy---"
-    echo -e "\t---changed by www.idleleo.com---"
     echo -e "\thttps://github.com/paniy\n"
     echo -e "Currently script version:${shell_mode}\n"
 
