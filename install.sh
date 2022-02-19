@@ -578,7 +578,7 @@ port_exist_check() {
 }
 
 acme() {
-    if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --standalone -k ec-256 --force --test; then
+    if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --standalone -k ec-256 --server letsencrypt --force --test; then
         echo -e "${OK} ${GreenBG} The SSL certificate test issuance is successful, begin certificate issuance ${Font}"
         rm -rf "$HOME/.acme.sh/${domain}_ecc"
         sleep 2
@@ -588,7 +588,7 @@ acme() {
         exit 1
     fi
 
-    if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --standalone -k ec-256 --force; then
+    if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --standalone -k ec-256 --server letsencrypt --force; then
         echo -e "${OK} ${GreenBG} SSL certificate generated successfully ${Font}"
         sleep 2
         mkdir /data
