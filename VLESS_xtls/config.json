@@ -4,38 +4,125 @@
         "error": "/var/log/xray/error.log",
         "loglevel": "warning"
     },
-    "inbounds": [{
-        "port": 443,
-        "protocol": "vless",
-        "settings": {
-            "clients": [{
-                "id": "UUID",
-                "flow": "xtls-rprx-direct",
-                "level": 0,
-                "email": "user@example.com"
-            }],
-            "decryption": "none",
-            "fallbacks": [{
-                "dest": 8080,
-                "xver": 1
-            }]
-        },
-        "streamSettings": {
-            "network": "tcp",
-            "security": "xtls",
-            "xtlsSettings": {
-                "minVersion": "1.2",
-                "alpn": [
-                    "http/1.1"
+    "inbounds": [
+        {
+            "port": 443,
+            "listen": "0.0.0.0",
+            "protocol": "VLESS",
+            "tag": "VLESS-XTLS-in",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "UUID",
+                        "flow": "xtls-rprx-vision,none",
+                        "level": 0,
+                        "email": "me@idleleo.com"
+                    }
                 ],
-                "certificates": [{
-                    "certificateFile": "/data/xray.crt",
-                    "keyFile": "/data/xray.key"
-                }]
+                "decryption": "none",
+                "fallbacks": [
+                    {
+                        "dest": 8080,
+                        "xver": 1
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "tcp",
+                "security": "tls",
+                "tlsSettings": {
+                    "rejectUnknownSni": true,
+                    "certificates": [
+                        {
+                            "certificateFile": "/etc/idleleo/cert/xray.crt",
+                            "keyFile": "/etc/idleleo/cert/xray.key"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "port": 10086,
+            "listen": "127.0.0.1",
+            "tag": "VLESS-ws-in",
+            "protocol": "VLESS",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "UUID",
+                        "level": 0,
+                        "email": "ws@idleleo.com"
+                    }
+                ],
+                "decryption": "none"
+            },
+            "streamSettings": {
+                "network": "ws",
+                "security": "none",
+                "wsSettings": {
+                    "path": "/websocket"
+                }
+            }
+        },
+        {
+            "port": 10087,
+            "listen": "127.0.0.1",
+            "tag": "VLESS-gRPC-in",
+            "protocol": "VLESS",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "UUID",
+                        "level": 0,
+                        "email": "me@idleleo.com"
+                    }
+                ],
+                "decryption": "none"
+            },
+            "streamSettings": {
+                "network": "grpc",
+                "security": "none",
+                "grpcSettings": {
+                    "serviceName": "grpc",
+                    "multiMode": true,
+                    "idle_timeout": 20
+                }
             }
         }
-    }],
-    "outbounds": [{
-        "protocol": "freedom"
-    }]
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "tag": "direct"
+        },
+        {
+            "protocol": "blackhole",
+            "tag": "blocked"
+        }
+    ],
+    "dns": {
+        "servers": [
+            "8.8.8.8",
+            "8.8.4.4",
+            "1.1.1.1",
+            "1.0.0.1",
+            "localhost",
+            "https+local://dns.google/dns-query",
+            "https+local://1.1.1.1/dns-query"
+        ]
+    },
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [
+            {
+                "type": "field",
+                "inboundTag": [
+                    "VLESS-XTLS-in",
+                    "VLESS-ws-in",
+                    "VLESS-gRPC-in"
+                ],
+                "outboundTag": "direct"
+            }
+        ]
+    }
 }
